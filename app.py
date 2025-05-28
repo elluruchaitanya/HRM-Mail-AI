@@ -1,7 +1,7 @@
 from Email.EmailReader import EmailReader
 def main():
-    email_user = "elluruchaitanya7@gmail.com"
-    email_pass = "fcat xslg aqyk unha"
+    email_user = "chaitanya.elluru@arissaindia.com"
+    email_pass = "Hanuman$25"
     smtp_server = "smtp.gmail.com"
     smtp_port = 465
 
