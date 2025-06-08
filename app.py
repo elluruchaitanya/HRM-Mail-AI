@@ -1,6 +1,7 @@
 import os
 from dotenv import load_dotenv
 from Email.EmailReader import EmailReader
+import SentimentAnalyzer.RunReviewPrompt as prompt
 
 def print_formatted_email(subject, body):
     print("\n" + "=" * 60)
@@ -16,7 +17,12 @@ def print_formatted_email(subject, body):
         preview = body.strip()
 
         print(preview)
-    
+
+def RunPromptToGenerateResponse(reviewTable):
+    for review in reviewTable:
+       response = prompt.generate_response("Hi, I am"+review.Revieweruser+". My purpose of travel is "+review.purposeOfTravel+"."+review.reviewText)
+       review["ArissaAI"] = response
+    print(reviewTable)
 
 def main():
     load_dotenv()
@@ -35,7 +41,7 @@ def main():
     subject_filter = "Daily Review Report"         # ← or None
     unread_only = False                    # ← change to False to include all
 
-    subject, body = reader.fetch_latest_email(
+    subject, body, reviewTextTable = reader.fetch_latest_email(
         sender=sender_filter,
         subject=subject_filter,
         unread_only=unread_only
@@ -45,6 +51,11 @@ def main():
         print_formatted_email(subject, body)
     else:
         print("[INFO] No matching email found.")
+    if reviewTextTable :
+        # call the prompt that returns the response.
+        reviewTextTable.insert(len(reviewTextTable.columns),"ArissaAI",'')
+        RunPromptToGenerateResponse(reviewTextTable)
+        print(reviewTextTable)
 
 if __name__ == "__main__":
     main()

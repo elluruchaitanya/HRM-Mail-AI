@@ -78,6 +78,7 @@ class EmailReader:
 
             # Get HTML body
             body = ""
+            reviewTextTable = ""
             if msg.is_multipart():
                 for part in msg.walk():
                     content_type = part.get_content_type()
@@ -131,6 +132,7 @@ class EmailReader:
 
             if table_data:
                 # Save JSON data
+                reviewTextTable = table_data
                 with open("table_data.json", "w", encoding="utf-8") as f:
                     json.dump(table_data, f, ensure_ascii=False, indent=4)
                 print("[✅] Table data saved to table_data.json")
@@ -143,7 +145,7 @@ class EmailReader:
             #     print("[⚠️] No matching table found.")
 
             mail.logout()
-            return subject, body
+            return subject, body , reviewTextTable
 
         except Exception as e:
             print(f"[ERROR] An error occurred: {str(e)}")
