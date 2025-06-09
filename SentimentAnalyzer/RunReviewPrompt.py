@@ -6,7 +6,7 @@ import openai
 import logging
 from langchain_openai import ChatOpenAI
 from langchain.schema import HumanMessage, SystemMessage
-import sentimentAnalysis as sentiment
+import SentimentAnalyzer.sentimentAnalysis as sentiment
 
 from dotenv import load_dotenv
 # Verify API key

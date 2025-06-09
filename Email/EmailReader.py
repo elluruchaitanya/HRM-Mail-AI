@@ -4,6 +4,7 @@ from email.header import decode_header
 from bs4 import BeautifulSoup
 import json
 import os
+import pandas as pd
 
 
 class EmailReader:
@@ -132,10 +133,17 @@ class EmailReader:
 
             if table_data:
                 # Save JSON data
+                print("table_data", table_data)
                 reviewTextTable = table_data
+                # If table_data is your original list of review dictionaries
+                # Add 'ArissaAI' column with empty strings
+                for review in reviewTextTable:
+                    review["ArissaAI"] = ''
+
+    # Save to JSON file
                 with open("table_data.json", "w", encoding="utf-8") as f:
                     json.dump(table_data, f, ensure_ascii=False, indent=4)
-                print("[✅] Table data saved to table_data.json")
+                    print("[✅] Table data saved to table_data.json")
 
             #     # Save HTML table only (optional)
             #     with open("selected_table.html", "w", encoding="utf-8") as f:

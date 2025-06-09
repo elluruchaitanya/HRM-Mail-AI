@@ -1,11 +1,11 @@
 import torch
-from DistilBERT.SentimentDistilBERTDef import SentimentDistilBERT
-from transformers import DistilBertTokenizerFast, DistilBertForSequenceClassification
-from DistilBERT.CommonDefinitions import MethodsToTrainAndLoad
+from SentimentAnalyzer.SentimentDistilBERTDef import SentimentDistilBERT
+# from transformers import DistilBertTokenizerFast, DistilBertForSequenceClassification
+from SentimentAnalyzer.CommonDefinitions import MethodsToTrainAndLoad
 
 model = SentimentDistilBERT(MethodsToTrainAndLoad.model)
 # Load trained weights
-model.load_state_dict(torch.load("DistilBERT/fine_tuned_distilbert.pth"))
+model.load_state_dict(torch.load("SentimentAnalyzer/fine_tuned_distilbert.pth"))
 model.eval()  # Switch to evaluation mode
 
 def predict_sentiment(text):
