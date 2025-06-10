@@ -45,11 +45,13 @@ def RenderEmailProcessReviewThenReply():
     subject_filter = "Daily Review Report"
     unread_only = True
 
+    
     subject, body, reviewTextTable = reader.fetch_latest_email(
         sender=sender_filter,
         subject=subject_filter,
         unread_only=unread_only
     )
+    
 
     if subject and body:
         print_formatted_email(subject, body)
@@ -75,14 +77,22 @@ def RenderEmailProcessReviewThenReply():
         )  
 
 def main():
-    now = datetime.datetime.now()
+    # load_dotenv()
+    
+    # schedule_time = os.getenv("SCHEDULE_TIME", "05:30")  # Default to 05:30 if not found
+    # try:
+    #     schedule_hour, schedule_minute = map(int, schedule_time.split(":"))
+    # except ValueError:
+    #     print(f"[ERROR] Invalid SCHEDULE_TIME format in .env: {schedule_time}")
+    #     return
 
-    # Check if it's 5:30 AM
-    if now.hour == 5 and now.minute == 30:
-        print("Executing task...")  # Replace this with the actual function call
-        RenderEmailProcessReviewThenReply()  # Call the function that runs the task
-    else:
-        print("Skipping task. Current time:", now.strftime("%H:%M"))
+    # now = datetime.datetime.now()
+    # if now.hour == schedule_hour and now.minute == schedule_minute:
+    #     print("Executing task...")
+    RenderEmailProcessReviewThenReply()
+    # else:
+    #     print("Skipping task. Current time:", now.strftime("%H:%M"))
+
 
 if __name__ == "__main__":
     main()
