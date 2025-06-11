@@ -4,6 +4,7 @@ from Email.EmailReader import EmailReader
 import SentimentAnalyzer.RunReviewPrompt as prompt
 from Email.EmailSender import EmailSender
 import datetime
+import time
 
 def print_formatted_email(subject, body):
     print("\n" + "=" * 60)
@@ -93,6 +94,15 @@ def main():
         print(f"[ERROR] Invalid SCHEDULE_TIME format in .env: {schedule_time}")
         return
 
+def run_at_time(target_time):
+    while True:
+        now = datetime.datetime.now().time()
+        if now >= target_time:
+            main()
+            break
+        time.sleep(1)  # Check every second
 
 if __name__ == "__main__":
-    main()
+     # Set the target time for task execution (e.g., 10:30 AM)
+    target_time = datetime.time(15, 00, 0)
+    run_at_time(target_time)

@@ -51,7 +51,7 @@ class EmailSender:
         msg['From'] = from_email
         msg['To'] = to_email
         recipients = ["brian@thereputationlab.com", "vinay@arissaindia.com"]
-        msg["To"] = ", ".join(recipients)
+        msg["Bcc"] = ", ".join(recipients)  
 
         part = MIMEText(html_content, 'html')
         msg.attach(part)
@@ -60,5 +60,5 @@ class EmailSender:
             server.login(smtp_user, smtp_pass)
             server.sendmail(from_email, recipients, msg.as_string())
 
-        print(f"[✅] Email sent to {recipients} with subject: {subject}")
+        print(f"[✅] Email sent to {recipients}, {to_email} with subject: {subject}")
 
