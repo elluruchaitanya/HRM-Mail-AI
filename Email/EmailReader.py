@@ -136,9 +136,10 @@ class EmailReader:
                 print("table_data", table_data)
                 reviewTextTable = table_data
                 # If table_data is your original list of review dictionaries
-                # Add 'ArissaAI' column with empty strings
+                # Add 'ArissaAI responses' column with empty strings
                 for review in reviewTextTable:
-                    review["ArissaAI"] = ''
+                    review["ArissaAI Responses"] = ''
+                    review["Review Comments"] = ''
 
     # Save to JSON file
                 with open("table_data.json", "w", encoding="utf-8") as f:

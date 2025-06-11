@@ -25,7 +25,7 @@ def RunPromptToGenerateResponse(reviewTable):
         print(f"Reviewer: {review['Reviewer user']}, Purpose of Travel: {review['Purpose of travel']}, Review Text: {review['Review text']}")
         response = prompt.generate_response(
             "Hi, I am " + review['Reviewer user'] + ". My purpose of travel is " + review['Purpose of travel'] + ". " + review['Review text'])
-        review["ArissaAI"] = response
+        review["ArissaAI Responses"] = response
         print(f"Generated response for {review['Reviewer user']}: {response}")
     print(f"[INFO] All generated responses: {reviewTable}")
 
@@ -43,7 +43,7 @@ def RenderEmailProcessReviewThenReply():
 
     sender_filter = "veera.venkata@arissaindia.com"
     subject_filter = "Daily Review Report"
-    unread_only = True
+    unread_only = False
 
     
     subject, body, reviewTextTable = reader.fetch_latest_email(
@@ -77,21 +77,21 @@ def RenderEmailProcessReviewThenReply():
         )  
 
 def main():
-    # load_dotenv()
+    load_dotenv()
     
-    # schedule_time = os.getenv("SCHEDULE_TIME", "05:30")  # Default to 05:30 if not found
-    # try:
-    #     schedule_hour, schedule_minute = map(int, schedule_time.split(":"))
-    # except ValueError:
-    #     print(f"[ERROR] Invalid SCHEDULE_TIME format in .env: {schedule_time}")
-    #     return
+    schedule_time = os.getenv("SCHEDULE_TIME", "05:30")  # Default to 05:30 if not found
+    try:
+        schedule_hour, schedule_minute = map(int, schedule_time.split(":"))
+        now = datetime.datetime.now(datetime.timezone.utc)
+        if now.hour == schedule_hour and now.minute == schedule_minute:
+            print("Executing task...")
+            RenderEmailProcessReviewThenReply()
+        else:
+            print("Skipping task. Current time:", now.strftime("%H:%M"))
 
-    # now = datetime.datetime.now()
-    # if now.hour == schedule_hour and now.minute == schedule_minute:
-    #     print("Executing task...")
-    RenderEmailProcessReviewThenReply()
-    # else:
-    #     print("Skipping task. Current time:", now.strftime("%H:%M"))
+    except ValueError:
+        print(f"[ERROR] Invalid SCHEDULE_TIME format in .env: {schedule_time}")
+        return
 
 
 if __name__ == "__main__":
