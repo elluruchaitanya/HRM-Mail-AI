@@ -13,8 +13,9 @@ class EmailReader:
         self.email_pass = email_pass
         self.imap_server = imap_server
 
-    def fetch_latest_email(self, sender=None, subject=None, unread_only=False):
-        try:
+    def retrieve_unread_mails(self,sender=None, subject=None, unread_only=False):
+          try:
+            allUnreadMessageData = []
             print("[INFO] Connecting to IMAP server...")
             mail = imaplib.IMAP4_SSL(self.imap_server)
             mail.login(self.email_user, self.email_pass)
@@ -45,23 +46,33 @@ class EmailReader:
 
             if status != "OK":
                 print("[ERROR] Failed to search emails.")
-                return None, None
+                return None
 
-            email_ids = messages[0].split()
+            email_ids = messages[0].split()            
             if not email_ids:
                 print("[INFO] No matching emails found.")
-                return None, None
+                return None
+            for emailContent in email_ids:
+                print(f"[INFO] Fetching email ID: {emailContent.decode()}")
+                status, msg_data = mail.fetch(emailContent, "(RFC822)")
+                if status != "OK":
+                    print("[ERROR] Failed to fetch the email.")
+                    return None
+                if msg_data and isinstance(msg_data[0], tuple): 
+                    allUnreadMessageData.append(msg_data[0][1])
+            # Add a label (custom flag example)
+                mail.store(emailContent, '+FLAGS', r'(\Flagged)')
+            mail.close()
+            mail.logout()
+            return allUnreadMessageData
+          except Exception as e:
+                print(f"[ERROR] An error occurred: {str(e)}")
+                return None
 
-            latest_email_id = email_ids[-1]
-            print(f"[INFO] Fetching email ID: {latest_email_id.decode()}")
-
-            status, msg_data = mail.fetch(latest_email_id, "(RFC822)")
-            if status != "OK":
-                print("[ERROR] Failed to fetch the email.")
-                return None, None
-
-            msg = email.message_from_bytes(msg_data[0][1])
-
+    def fetch_latest_email(self, msg_data):
+        try:
+            msg = email.message_from_bytes(msg_data)
+            print(f"subject value is {msg}")
             # Decode subject
             # Decode subject
             raw_subject, encoding = decode_header(msg["Subject"])[0]
@@ -70,12 +81,6 @@ class EmailReader:
                 if isinstance(raw_subject, bytes)
                 else raw_subject
             )
-
-            # Manual partial match check
-            if subject_contains and subject_contains not in subject.lower():
-                print(f"[INFO] Skipping email: subject does not contain '{subject_contains}'")
-                return None, None
-
 
             # Get HTML body
             body = ""
@@ -141,7 +146,7 @@ class EmailReader:
                     review["ArissaAI Responses"] = ''
                     review["Review Comments"] = ''
 
-    # Save to JSON file
+            # Save to JSON file
                 with open("table_data.json", "w", encoding="utf-8") as f:
                     json.dump(table_data, f, ensure_ascii=False, indent=4)
                     print("[✅] Table data saved to table_data.json")
@@ -152,15 +157,9 @@ class EmailReader:
             #     print("[✅] Raw HTML of table saved to selected_table.html")
             # else:
             #     print("[⚠️] No matching table found.")
-
-            mail.logout()
+            
             return subject, body , reviewTextTable
 
         except Exception as e:
             print(f"[ERROR] An error occurred: {str(e)}")
             return None, None
-
-
-# Example usage (comment out when integrating):
-# reader = EmailReader("your_email@gmail.com", "your_password")
-# reader.fetch_latest_email(sender="example@domain.com", unread_only=True)
