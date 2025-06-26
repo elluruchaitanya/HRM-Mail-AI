@@ -17,7 +17,7 @@ def print_formatted_email(subject, body):
         print("[No plain text body found or empty message]")
     else:
         preview = body.strip()
-        print(preview)
+        #print(preview)
 
 
 def RunPromptToGenerateResponse(reviewTable):
@@ -30,6 +30,20 @@ def RunPromptToGenerateResponse(reviewTable):
             review["ArissaAI Responses"] = response
             #print(f"Generated response for {review['Reviewer user']}: {response}")
             #print(f"[INFO] All generated responses: {reviewTable}")
+        else:
+            if(len(review["Review score"]) | len(review["Purpose of travel"])) > 0:
+                response = CreateCustomResponse(review["Review score"],review["Purpose of travel"])
+                reviewUser = review["Reviewer user"]                   
+                review["ArissaAI Responses"] = "Dear "+reviewUser+"\n\n "+response
+
+def CreateCustomResponse(score,visitPurpose):
+    if(int(score) <= 5 and int(score) >=0):
+        return "Your many Royal Sonesta friends extend a warm hello, and we thank you for investing the time to share your perfect scores.  We do hope that this exceptional experience soon inspires you to visit again and we look forward to welcoming you back to both the hotel and our iconic Central West-End neighborhood.  Until next time.\n\n All the best"
+    elif(int(score) >= 5 and int(score) <=10):
+        return "Your many Royal Sonesta friends extend a warm hello, and we thank you for investing the time to share your perfect scores.  We do hope that this exceptional experience soon inspires you to visit again and we look forward to welcoming you back to both the hotel and our iconic Central West-End neighborhood.  Until next time.\n\n All the best"
+    else:
+        return "Your many Royal Sonesta friends extend a warm hello, and we thank you for investing the time to share your perfect scores.  We do hope that this exceptional experience soon inspires you to visit again and we look forward to welcoming you back to both the hotel and our iconic Central West-End neighborhood.  Until next time.\n\n All the best"
+    
 
 def RenderEmailProcessReviewThenReply():
     load_dotenv()
@@ -43,7 +57,7 @@ def RenderEmailProcessReviewThenReply():
 
     reader = EmailReader(email_user, email_pass)
 
-    sender_filter = "veera.venkata@arissaindia.com"
+    sender_filter = os.getenv("SENDER_EMAIL")
     subject_filter = "Daily Review Report"
     unread_only = True
 
@@ -66,7 +80,7 @@ def RenderEmailProcessReviewThenReply():
                 return
 
             if reviewTextTable:
-                print(f"reviewTextTable: {reviewTextTable}")
+                #print(f"reviewTextTable: {reviewTextTable}")
                 RunPromptToGenerateResponse(reviewTextTable)
 
             html_content_With_AIResponse = EmailSender.format_html_table(reviewTextTable)
@@ -97,10 +111,10 @@ def main():
 def run_at_time(target_time):
     while True:
         now = datetime.datetime.now().time()
-        if now >= target_time:
-            main()
-            break
-        time.sleep(900)  # Check every second
+        #if now >= target_time:
+        main()
+            #break
+        #time.sleep(900)  # Check every second
 
 if __name__ == "__main__":
      # Set the target time for task execution (e.g., 10:30 AM)

@@ -138,7 +138,7 @@ class EmailReader:
 
             if table_data:
                 # Save JSON data
-                print("table_data", table_data)
+                #print("table_data", table_data)
                 reviewTextTable = table_data
                 # If table_data is your original list of review dictionaries
                 # Add 'ArissaAI responses' column with empty strings

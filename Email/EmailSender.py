@@ -8,7 +8,7 @@ class EmailSender:
         if not reviewTable:
             return "<p>No review data found.</p>"
 
-        desired_headers = ["Reviewer user", "Review text", "ArissaAI Responses", "Review Comments"]
+        desired_headers = ["Property name","Site name","Review date","Reviewer user", "Review text", "Review score","ArissaAI Responses", "Review Comments"]
 
         table_style = "width: 100%; border-collapse: collapse; font-family: Arial, sans-serif; font-size: 14px;"
         th_style = "border: 1px solid #444444; padding: 10px; background-color: #34BDEB; color: white; text-align: left;"
@@ -51,6 +51,7 @@ class EmailSender:
         msg['From'] = from_email
         msg['To'] = to_email
         recipients = ["brian@thereputationlab.com", "vinay@arissaindia.com"]
+        #recipients = ["chaitanya.elluru@arissaindia.com"]
         msg["Bcc"] = ", ".join(recipients)  
 
         part = MIMEText(html_content, 'html')

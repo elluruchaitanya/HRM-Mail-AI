@@ -27,23 +27,23 @@ signature_template = "\n\nBest regards,\nAI Assistant"
 
 def generate_assistant_prompt(sentimentResponse):
     if sentimentResponse == "Positive":
-        return "Always starts the response with 'Dear {user_name}' and end the response with '{signature_template}'.Express appreciation and reinforce the positive aspects mentioned by the user. Encourage engagement and loyalty by highlighting standout features."
+        return "Respond in under 250 tokens. Be concise and complete. Always starts the response with 'Dear {user_name}' and end the response with '{signature_template}'.Express appreciation and reinforce the positive aspects mentioned by the user. Encourage engagement and loyalty by highlighting standout features."
     elif sentimentResponse == "Neutral":
-        return "Always starts the response with 'Dear {user_name}' and end the response with '{signature_template}'.You are an informative assistant. Provide factual and helpful responses in a neutral manner."
+        return "Respond in under 250 tokens. Be concise and complete. Always starts the response with 'Dear {user_name}' and end the response with '{signature_template}'.You are an informative assistant. Provide factual and helpful responses in a neutral manner."
     elif sentimentResponse == "Negative":
-        return "Always starts the response with 'Dear {user_name}' and end the response with '{signature_template}'.Be empathetic and solution-oriented. Address concerns carefully, offer resolutions or clarifications, and provide actionable steps to improve customer experience."
+        return "Respond in under 250 tokens. Be concise and complete. Always starts the response with 'Dear {user_name}' and end the response with '{signature_template}'.Be empathetic and solution-oriented. Address concerns carefully, offer resolutions or clarifications, and provide actionable steps to improve customer experience."
     else:
-        return "Always starts the response with 'Dear {user_name}' and end the response with '{signature_template}'.You are an assistant that provides general guidance."
+        return "Respond in under 250 tokens. Be concise and complete. Always starts the response with 'Dear {user_name}' and end the response with '{signature_template}'.You are an assistant that provides general guidance."
 
 hyperlink = f'<a href="https://www.sonesta.com/royal-sonesta/mo/st-louis/chase-park-plaza-royal-sonesta-st-louis?utm_source=google&utm_medium=organic&utm_campaign=gmb">{hotelname}</a>'
 
 
 def generate_response(promptInput):    
     sentimentResponse = sentiment.AnalyzeSentiment(promptInput)
-    assistant_prompt = generate_assistant_prompt(sentimentResponse)
+    assistant_prompt = generate_assistant_prompt(sentimentResponse+"Be concise. Use plain language. Avoid repetition.")
     openai.api_key = OPENAI_API_KEY
     os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
-    llm = ChatOpenAI(model = "gpt-4-turbo", temperature=0.3, max_tokens=1000)
+    llm = ChatOpenAI(model = "gpt-4-turbo", temperature=0.7, max_tokens=250)
     try:
         messages = [
             SystemMessage(content=assistant_prompt),
