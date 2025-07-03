@@ -22,28 +22,15 @@ def print_formatted_email(subject, body):
 
 def RunPromptToGenerateResponse(reviewTable):
     for review in reviewTable:
-        if len(review['Review text']) > 0:
-            print(f"Review: {review}")
-            print(f"Reviewer: {review['Reviewer user']}, Purpose of Travel: {review['Purpose of travel']}, Review Text: {review['Review text']}")
-            response = prompt.generate_response(
-                "Hi, I am " + review['Reviewer user'] + ". My purpose of travel is " + review['Purpose of travel'] + ". " + review['Review text'])
-            review["ArissaAI Responses"] = response
-            #print(f"Generated response for {review['Reviewer user']}: {response}")
-            #print(f"[INFO] All generated responses: {reviewTable}")
-        else:
-            if(len(review["Review score"]) | len(review["Purpose of travel"])) > 0:
-                response = CreateCustomResponse(review["Review score"],review["Purpose of travel"])
-                reviewUser = review["Reviewer user"]                   
-                review["ArissaAI Responses"] = "Dear "+reviewUser+"\n\n "+response
-
-def CreateCustomResponse(score,visitPurpose):
-    if(int(score) <= 5 and int(score) >=0):
-        return "Your many Royal Sonesta friends extend a warm hello, and we thank you for investing the time to share your perfect scores.  We do hope that this exceptional experience soon inspires you to visit again and we look forward to welcoming you back to both the hotel and our iconic Central West-End neighborhood.  Until next time.\n\n All the best"
-    elif(int(score) >= 5 and int(score) <=10):
-        return "Your many Royal Sonesta friends extend a warm hello, and we thank you for investing the time to share your perfect scores.  We do hope that this exceptional experience soon inspires you to visit again and we look forward to welcoming you back to both the hotel and our iconic Central West-End neighborhood.  Until next time.\n\n All the best"
-    else:
-        return "Your many Royal Sonesta friends extend a warm hello, and we thank you for investing the time to share your perfect scores.  We do hope that this exceptional experience soon inspires you to visit again and we look forward to welcoming you back to both the hotel and our iconic Central West-End neighborhood.  Until next time.\n\n All the best"
-    
+        reviewScore = review['Review score']
+        reviewTravelPurpose = review['Purpose of travel']
+        reviewUser = review['Reviewer user']
+        reviewText= review['Review text']
+        finalReviewText= f"Here is a review from the user {reviewUser} with a {reviewScore} star review and visited here for a {reviewTravelPurpose}. The review provided by the user is {reviewText}.Provide the response for this."
+        print(finalReviewText)
+        response = prompt.generate_response(finalReviewText,reviewUser)
+        print(response)
+        review["ArissaAI Responses"] = response
 
 def RenderEmailProcessReviewThenReply():
     load_dotenv()
@@ -82,7 +69,7 @@ def RenderEmailProcessReviewThenReply():
             if reviewTextTable:
                 #print(f"reviewTextTable: {reviewTextTable}")
                 RunPromptToGenerateResponse(reviewTextTable)
-
+                print(f"reviewTextTablewithresponse \n \n: {reviewTextTable}")
             html_content_With_AIResponse = EmailSender.format_html_table(reviewTextTable)
             if html_content_With_AIResponse:
                 EmailSender.SendEmail(

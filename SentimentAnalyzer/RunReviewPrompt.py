@@ -6,6 +6,12 @@ import openai
 import logging
 from langchain_openai import ChatOpenAI
 from langchain.schema import HumanMessage, SystemMessage
+from langchain.prompts.chat import (    
+    ChatPromptTemplate,
+    SystemMessagePromptTemplate,
+    HumanMessagePromptTemplate,
+)
+
 import SentimentAnalyzer.sentimentAnalysis as sentiment
 
 from dotenv import load_dotenv
@@ -25,41 +31,35 @@ hotelname="Royal Sonesta Chase Park"
 
 signature_template = "\n\nBest regards,\nAI Assistant"
 
-def generate_assistant_prompt(sentimentResponse):
-    if sentimentResponse == "Positive":
-        return "Respond in under 250 tokens. Be concise and complete. Always starts the response with 'Dear {user_name}' and end the response with '{signature_template}'.Express appreciation and reinforce the positive aspects mentioned by the user. Encourage engagement and loyalty by highlighting standout features."
-    elif sentimentResponse == "Neutral":
-        return "Respond in under 250 tokens. Be concise and complete. Always starts the response with 'Dear {user_name}' and end the response with '{signature_template}'.You are an informative assistant. Provide factual and helpful responses in a neutral manner."
-    elif sentimentResponse == "Negative":
-        return "Respond in under 250 tokens. Be concise and complete. Always starts the response with 'Dear {user_name}' and end the response with '{signature_template}'.Be empathetic and solution-oriented. Address concerns carefully, offer resolutions or clarifications, and provide actionable steps to improve customer experience."
-    else:
-        return "Respond in under 250 tokens. Be concise and complete. Always starts the response with 'Dear {user_name}' and end the response with '{signature_template}'.You are an assistant that provides general guidance."
+def generate_assistant_prompt():
+   template_path = Path("SentimentAnalyzer\ChaseParkPlazaRoyalSonesta.txt")
+   #print(f'template path',template_path)
+   return SystemMessagePromptTemplate.from_template_file(template_path,
+    input_variables=["username"] )
 
-hyperlink = f'<a href="https://www.sonesta.com/royal-sonesta/mo/st-louis/chase-park-plaza-royal-sonesta-st-louis?utm_source=google&utm_medium=organic&utm_campaign=gmb">{hotelname}</a>'
-
-
-def generate_response(promptInput):    
-    sentimentResponse = sentiment.AnalyzeSentiment(promptInput)
-    assistant_prompt = generate_assistant_prompt(sentimentResponse+"Be concise. Use plain language. Avoid repetition.")
+def generate_response(promptInput, reviewuser):    
+    #sentimentResponse = sentiment.AnalyzeSentiment(promptInput)
+    assistant_prompt = generate_assistant_prompt()
+    #print(f'system prompt generated as ',assistant_prompt)
     openai.api_key = OPENAI_API_KEY
     os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
-    llm = ChatOpenAI(model = "gpt-4-turbo", temperature=0.7, max_tokens=250)
     try:
-        messages = [
-            SystemMessage(content=assistant_prompt),
-            HumanMessage(content=promptInput)
-        ]
-        result = llm.invoke(messages)
-        response = result.content[:1000].strip()
-        print(f"Generated response: {response}")
-        max_response_length = 1000
-        response = response[:max_response_length]
-        if hotelname in response:
-            return response.replace(hotelname,hyperlink)
-        else:
-            return response
+        # Human prompt with a placeholder
+        human_prompt = HumanMessagePromptTemplate.from_template("{user_query}")
+
+        # Combine into ChatPromptTemplate
+        chat_prompt = ChatPromptTemplate.from_messages([assistant_prompt, human_prompt])
+        
+        llm = ChatOpenAI(model = "gpt-4-turbo", temperature=0.7, max_tokens=250)
+        # Format messages with actual user input
+        messages = chat_prompt.format_messages(user_query=promptInput,username=reviewuser)
+
+        # Run the model
+        response = llm.invoke(messages)
+        #print(f'generated response: \n', response.content)
+        return response.content
     except Exception as e:
-        logger.error(f"Error generating response: {e}")
+        print(f"Error generating response: {e}")
         return "We encountered an issue while processing your request. Please try again later."
 
  
