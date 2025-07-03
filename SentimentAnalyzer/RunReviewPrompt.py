@@ -32,7 +32,7 @@ hotelname="Royal Sonesta Chase Park"
 signature_template = "\n\nBest regards,\nAI Assistant"
 
 def generate_assistant_prompt():
-   template_path = Path("SentimentAnalyzer\ChaseParkPlazaRoyalSonesta.txt")
+   template_path = Path("SentimentAnalyzer/ChaseParkPlazaRoyalSonesta.txt")
    #print(f'template path',template_path)
    return SystemMessagePromptTemplate.from_template_file(template_path,
     input_variables=["username"] )
