@@ -50,8 +50,8 @@ class EmailSender:
         msg['Subject'] = subject
         msg['From'] = from_email
         msg['To'] = to_email
-        recipients = ["brian@thereputationlab.com", "vinay@arissaindia.com"]
-        #recipients = ["chaitanya.elluru@arissaindia.com"]
+        #recipients = ["brian@thereputationlab.com", "vinay@arissaindia.com"]
+        recipients = ["chaitanya.elluru@arissaindia.com"]
         msg["Bcc"] = ", ".join(recipients)  
 
         part = MIMEText(html_content, 'html')
