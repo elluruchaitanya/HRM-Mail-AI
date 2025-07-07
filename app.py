@@ -3,8 +3,10 @@ from dotenv import load_dotenv
 from Email.EmailReader import EmailReader
 import SentimentAnalyzer.RunReviewPrompt as prompt
 from Email.EmailSender import EmailSender
-import datetime
+from datetime import datetime
 import time
+import schedule
+import pytz
 
 def print_formatted_email(subject, body):
     print("\n" + "=" * 60)
@@ -95,18 +97,20 @@ def main():
         print(f"[ERROR] Invalid SCHEDULE_TIME format in .env")
         return
 
-def run_at_time(target_time):
+def run_at_time():
+    utc = pytz.utc
+    target_time = datetime.now(utc).replace(hour=5, minute=30, second=0, microsecond=0)
+
+    # Schedule every day at 5:30 UTC
+    #schedule.every().day.at("05:30").do(main)
+    schedule.every(15).minutes.do(main)
+
+    print("Scheduler started, waiting for 05:30 UTC...")
     while True:
-        now = datetime.datetime.now().time()
-        #if now >= target_time:
-        main()
-            #break
-        #time.sleep(900)  # Check every second
+        schedule.run_pending()
+        time.sleep(1)
+
 
 if __name__ == "__main__":
      # Set the target time for task execution (e.g., 10:30 AM)
-    print(datetime.datetime.now(datetime.timezone.utc))
-    schedule_time = os.getenv("SCHEDULE_TIME", "05:30")  # Default to 05:30 if not found
-    schedule_hour, schedule_minute = map(int, schedule_time.split(":"))
-    target_time = datetime.time(schedule_hour, schedule_minute, 0)
-    run_at_time(target_time)
+    run_at_time()
