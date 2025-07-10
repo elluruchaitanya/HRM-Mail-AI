@@ -63,6 +63,9 @@ def hotel_profile_page():
                     "reference_urls": [r.strip() for r in reference_urls.split(",") if r.strip()],
                 }
                 result = insert_or_update_hotel_profile(data)
+                #read the basic template
+                #replace the holders with data properties
+                #save as new file with the name hotelid.txt
 
                 if result == "Updated":
                     st.success("✅ Profile updated successfully!")
