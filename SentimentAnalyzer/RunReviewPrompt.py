@@ -4,6 +4,7 @@ import requests
 from pathlib import Path
 import openai
 import logging
+import time
 from langchain_openai import ChatOpenAI
 from langchain.schema import HumanMessage, SystemMessage
 from langchain.prompts.chat import (    
@@ -12,7 +13,7 @@ from langchain.prompts.chat import (
     HumanMessagePromptTemplate,
 )
 
-import SentimentAnalyzer.sentimentAnalysis as sentiment
+#import SentimentAnalyzer.sentimentAnalysis as sentiment
 
 from dotenv import load_dotenv
 # Verify API key
@@ -31,15 +32,19 @@ hotelname="Royal Sonesta Chase Park"
 
 signature_template = "\n\nBest regards,\nAI Assistant"
 
-def generate_assistant_prompt():
-   template_path = Path("SentimentAnalyzer/ChaseParkPlazaRoyalSonesta.txt")
-   #print(f'template path',template_path)
+def generate_assistant_prompt(hotel_id):
+   filePath = Path(__file__).parent.parent / "Frontend/HotelTemplates" / f"{hotel_id}.txt"
+   basicTemplatePath = Path(__file__).parent.parent/f"Frontend/HotelTemplates/basic_template.txt"
+   template_path = Path(filePath)  if os.path.exists(filePath) else Path(basicTemplatePath)
+   
+   print(f'template path',template_path)
+   time.sleep(60)
    return SystemMessagePromptTemplate.from_template_file(template_path,
     input_variables=["username"] )
 
-def generate_response(promptInput, reviewuser):    
+def generate_response(promptInput, reviewuser, hotel_id):    
     #sentimentResponse = sentiment.AnalyzeSentiment(promptInput)
-    assistant_prompt = generate_assistant_prompt()
+    assistant_prompt = generate_assistant_prompt(hotel_id)
     #print(f'system prompt generated as ',assistant_prompt)
     openai.api_key = OPENAI_API_KEY
     os.environ["OPENAI_API_KEY"] = OPENAI_API_KEY
