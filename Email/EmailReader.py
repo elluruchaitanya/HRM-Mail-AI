@@ -110,8 +110,7 @@ class EmailReader:
             for tag in soup.find_all():
                 if "Report Filters:" in tag.get_text(strip=True):
                     report_filters_html = str(tag)
-                    hotel_id = self.fetch_hotel_id(report_filters_html)
-                    time.sleep(60)
+                    hotel_id = self.fetch_hotel_id(report_filters_html)                    
                     print("[✅] Found Report Filters block.")
                     break
             else:
