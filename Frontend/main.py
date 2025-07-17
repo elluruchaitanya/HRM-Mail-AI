@@ -22,7 +22,7 @@ with st.sidebar:
     st.logo(sidebarlogo)
     if st.button("🏨 Hotel Profile"):
         st.session_state.current_page = "Hotel Profile"
-    if st.button("📝 Template Editor"):
+    if st.button("📝 Prompt Rules Editor"):
         st.session_state.current_page = "Template Editor"
 
 # Page routing

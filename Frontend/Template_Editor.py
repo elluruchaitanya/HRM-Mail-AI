@@ -10,23 +10,23 @@ def get_templates():
 
 
 def template_editor_page():
-    st.title("📝 Template Editor")
+    st.title("📝 Prompt Rules Editor")
     st.markdown("Write or edit your template content below.")
-    st.subheader("📂 Load Existing templates")
+    st.subheader("📂 Load Existing Hotel Prompts")
     templates = get_templates()
-    selected_version = st.selectbox("Choose a template to load", [""] + templates)
+    selected_version = st.selectbox("Choose a Prompt Rule to load", [""] + templates)
 
     if selected_version:
         with open(os.path.join(template_directory, selected_version), "r", encoding="utf-8") as f:
             content = f.read()
         st.session_state["text"] = content
         st.session_state["filename"] = selected_version
-        st.info(f"Loaded version: {selected_version}")
+        #st.info(f"Loaded version: {selected_version}")
 
     # Text editor
     if "text" in st.session_state:
-        st.subheader("✏️ Edit Content")
-        updated_text = st.text_area("Edit your text below:", value=st.session_state["text"], height=300)
+        st.subheader("✏️ Edit Rules")
+        updated_text = st.text_area("Update rules below:", value=st.session_state["text"], height=300)
 
         if st.button("💾 Save"):
             #filename = save_new_version(updated_text, st.session_state.get("filename", "edited"))

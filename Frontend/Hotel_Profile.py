@@ -4,7 +4,7 @@ from pathlib import Path
 from mongo_helper import insert_or_update_hotel_profile, get_hotel_profile_by_id, get_all_hotel_ids
 
 def hotel_profile_page():
-    st.title("Hotel Profile Form")
+    st.title("Hotel Profile")
 
     if "form_data" not in st.session_state:
         st.session_state.form_data = {
@@ -98,7 +98,7 @@ def hotel_profile_page():
                         # data["template_content"] = populated
 
                         # Overwrite or create the file
-                        output_file = Path(__file__).parent / "HotelTemplates" / f"{data['hotel_id']}.txt"
+                        output_file = Path(__file__).parent / "HotelTemplates" / f"{data['hotel_name']}-{data['hotel_id']}.txt"
                         with open(output_file, "w", encoding="utf-8") as out:
                             out.write(populated)
 

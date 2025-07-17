@@ -32,11 +32,19 @@ hotelname="Royal Sonesta Chase Park"
 
 signature_template = "\n\nBest regards,\nAI Assistant"
 
-def generate_assistant_prompt(hotel_id):
-   filePath = Path(__file__).parent.parent / "Frontend/HotelTemplates" / f"{hotel_id}.txt"
-   basicTemplatePath = Path(__file__).parent.parent/f"Frontend/HotelTemplates/basic_template.txt"
-   template_path = Path(filePath)  if os.path.exists(filePath) else Path(basicTemplatePath)
-   
+def find_file_by_hotelid(hotel_id):
+    directory = Path(__file__).parent.parent / "Frontend/HotelTemplates"
+    print("searching for the file")
+    for root, dirs, files in os.walk(directory):
+        for file in files:
+            if file.endswith('.txt') and f"-{hotel_id}.txt" in file:
+                print("found the file")
+                return os.path.join(root, file)
+    print("file doesnot exists so returning basic template file")
+    return  Path(__file__).parent.parent/f"Frontend/HotelTemplates/basic_template.txt"
+
+def generate_assistant_prompt(hotel_id):   
+   template_path =find_file_by_hotelid(hotel_id)   
    print(f'template path',template_path)
    time.sleep(60)
    return SystemMessagePromptTemplate.from_template_file(template_path,
