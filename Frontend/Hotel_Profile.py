@@ -13,7 +13,9 @@ def hotel_profile_page():
             "manager_name": "",
             "stop_words": "",
             "usps": "",
-            "reference_urls": ""
+            "reference_urls": "",
+            "signature": "",
+            "apporpriate_locations": "",
         }
 
     all_ids = get_all_hotel_ids()
@@ -43,6 +45,8 @@ def hotel_profile_page():
                 "stop_words": ", ".join(existing.get("stop_words", [])),
                 "usps": ", ".join(existing.get("usps", [])),
                 "reference_urls": ", ".join(existing.get("reference_urls", [])),
+                "signature": existing.get("signature", ""),
+                "apporpriate_locations": existing.get("apporpriate_locations", ""),
             }
 
     form_data = st.session_state.form_data
@@ -53,6 +57,8 @@ def hotel_profile_page():
         stop_words = st.text_area("Stop Words (comma-separated)", max_chars=1000, value=form_data["stop_words"])
         usps = st.text_area("USPs (comma-separated)", max_chars=1000, value=form_data["usps"])
         reference_urls = st.text_area("Reference URLs (comma-separated)", max_chars=1000, value=form_data["reference_urls"])
+        signature = st.text_input("Signature", max_chars=500, value=form_data["signature"])
+        apporpriate_locations = st.text_input("Appropriate Locations", max_chars=500, value=form_data["apporpriate_locations"])
 
         submitted = st.form_submit_button("✅ Submit")
 
@@ -67,6 +73,8 @@ def hotel_profile_page():
                     "stop_words": [w.strip() for w in stop_words.split(",") if w.strip()],
                     "usps": [u.strip() for u in usps.split(",") if u.strip()],
                     "reference_urls": [r.strip() for r in reference_urls.split(",") if r.strip()],
+                    "signature": signature.strip(),
+                    "apporpriate_locations": apporpriate_locations.strip(),
                 }
 
                 # Save/update to DB
@@ -94,6 +102,8 @@ def hotel_profile_page():
                             .replace("{{USPS}}", ", ".join(data["usps"]))
                             .replace("{{STOP_WORDS}}", ", ".join(data["stop_words"]))
                             .replace("{{REFERENCE_URLS}}", ", ".join(data["reference_urls"]))
+                            .replace("{{SIGNATURE}}", data["signature"])
+                            .replace("{{APPROPRIATE_LOCATIONS}}", data["apporpriate_locations"])
                         )
                         # data["template_content"] = populated
 
@@ -102,7 +112,7 @@ def hotel_profile_page():
                         with open(output_file, "w", encoding="utf-8") as out:
                             out.write(populated)
 
-                        st.success(f"📄 Template generated/updated: `{output_file.name}`")
+                        st.success(f"📄 Template generated/updated: {output_file.name}")
 
                 except Exception as e:
                     st.error(f"❌ Failed to generate/update template: {e}")
@@ -115,5 +125,7 @@ def hotel_profile_page():
                         "manager_name": "",
                         "stop_words": "",
                         "usps": "",
-                        "reference_urls": ""
+                        "reference_urls": "",
+                        "signature": "",
+                        "apporpriate_locations": "",
                     }
