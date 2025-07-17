@@ -5,6 +5,8 @@ from bs4 import BeautifulSoup
 import json
 import os
 import pandas as pd
+import re
+import time
 
 
 class EmailReader:
@@ -68,13 +70,12 @@ class EmailReader:
           except Exception as e:
                 print(f"[ERROR] An error occurred: {str(e)}")
                 return None
+          
+
 
     def fetch_latest_email(self, msg_data):
         try:
             msg = email.message_from_bytes(msg_data)
-            print(f"subject value is {msg}")
-            # Decode subject
-            # Decode subject
             raw_subject, encoding = decode_header(msg["Subject"])[0]
             subject = (
                 raw_subject.decode(encoding or "utf-8", errors="replace")
@@ -82,9 +83,10 @@ class EmailReader:
                 else raw_subject
             )
 
-            # Get HTML body
             body = ""
             reviewTextTable = ""
+            report_filters_html = ""
+
             if msg.is_multipart():
                 for part in msg.walk():
                     content_type = part.get_content_type()
@@ -100,10 +102,22 @@ class EmailReader:
 
             if not body:
                 print("[INFO] No HTML body found.")
-                return subject, None
+                return subject, None, None, None
 
-            # Parse and extract specific table
             soup = BeautifulSoup(body, "html.parser")
+
+            # --- Extract Report Filters block ---
+            for tag in soup.find_all():
+                if "Report Filters:" in tag.get_text(strip=True):
+                    report_filters_html = str(tag)
+                    hotel_id = self.fetch_hotel_id(report_filters_html)                    
+                    print("[✅] Found Report Filters block.")
+                    break
+            else:
+                print("[⚠️] Report Filters block not found.")
+            # print("[🧾] Extracted Report Filters block:\n", report_filters_html)
+
+            # --- Find Review Table ---
             tables = soup.find_all("table")
             print(f"[INFO] Found {len(tables)} table(s)")
 
@@ -116,8 +130,6 @@ class EmailReader:
                     continue
 
                 headers = [cell.get_text(strip=True) for cell in rows[0].find_all(["th", "td"])]
-
-                # Check for specific headers
                 if len(headers) < 10:
                     continue
                 if not ("Review text" in headers and "Review score" in headers):
@@ -137,29 +149,32 @@ class EmailReader:
                     break
 
             if table_data:
-                # Save JSON data
-                #print("table_data", table_data)
                 reviewTextTable = table_data
-                # If table_data is your original list of review dictionaries
-                # Add 'ArissaAI responses' column with empty strings
                 for review in reviewTextTable:
                     review["ArissaAI Responses"] = ''
                     review["Review Comments"] = ''
-
-            # Save to JSON file
                 with open("table_data.json", "w", encoding="utf-8") as f:
-                    json.dump(table_data, f, ensure_ascii=False, indent=4)
+                    json.dump(reviewTextTable, f, ensure_ascii=False, indent=4)
                     print("[✅] Table data saved to table_data.json")
+            else:
+                print("[⚠️] No matching table found.")
 
-            #     # Save HTML table only (optional)
-            #     with open("selected_table.html", "w", encoding="utf-8") as f:
-            #         f.write(selected_table_html)
-            #     print("[✅] Raw HTML of table saved to selected_table.html")
-            # else:
-            #     print("[⚠️] No matching table found.")
-            
-            return subject, body , reviewTextTable
+            return subject, body, reviewTextTable, hotel_id
 
         except Exception as e:
             print(f"[ERROR] An error occurred: {str(e)}")
-            return None, None
+            return None, None, None, None
+        
+    def fetch_hotel_id(self, report_html):
+                # parse the HTML
+        soup = BeautifulSoup(report_html, 'html.parser')
+
+        # find all text in the <td> tag
+        td_text = soup.get_text(separator=' ').strip()
+
+        # use regex to find hotel ID
+        match = re.search(r'- Hotel IDs:\s*(\d+)', td_text)
+        hotel_id = match.group(1) if match else None
+
+        print(f'Hotel ID: {hotel_id}')
+        return hotel_id
