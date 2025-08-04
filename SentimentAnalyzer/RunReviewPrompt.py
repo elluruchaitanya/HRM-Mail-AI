@@ -23,15 +23,6 @@ load_dotenv()
 google_api_key = os.getenv("OPEN_API_KEY_INFO_Account")
 OPENAI_API_KEY=google_api_key
 
-logged_in_manager_profile={
-    "username" : "Manager",
-    "Email":"Manager@YopMail.com"
-}
-
-hotelname="Royal Sonesta Chase Park"
-
-signature_template = "\n\nBest regards,\nAI Assistant"
-
 def find_file_by_hotelid(hotel_id):
     directory = Path(__file__).parent.parent / "Frontend/HotelTemplates"
     print("searching for the file")

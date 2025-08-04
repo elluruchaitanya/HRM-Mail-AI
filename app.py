@@ -100,9 +100,9 @@ def run_at_time():
     utc = pytz.utc
     target_time = datetime.now(utc).replace(hour=5, minute=30, second=0, microsecond=0)
     #schedule.every().day.at("05:30").do(main)
-    schedule.every(15).minutes.do(main)
+    schedule.every(1).minutes.do(main)
 
-    print("Scheduler started, waiting for next 15minutes to trigger")
+    print("Scheduler started, waiting for next 1minutes to trigger")
     while True:
         schedule.run_pending()
         time.sleep(1)
