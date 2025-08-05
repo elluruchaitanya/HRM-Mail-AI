@@ -11,6 +11,7 @@ def hotel_profile_page():
             "hotel_id": "",
             "hotel_name": "",  # ✅ Added hotel_name
             "manager_name": "",
+            "greetings": "",
             "stop_words": "",
             "usps": "",
             "reference_urls": "",
@@ -42,6 +43,7 @@ def hotel_profile_page():
                 "hotel_id": existing["hotel_id"],
                 "hotel_name": existing.get("hotel_name", ""),  # ✅ Load existing hotel_name
                 "manager_name": existing.get("manager_name", ""),
+                "greetings": existing.get("greetings", ""),
                 "stop_words": ", ".join(existing.get("stop_words", [])),
                 "usps": ", ".join(existing.get("usps", [])),
                 "reference_urls": ", ".join(existing.get("reference_urls", [])),
@@ -54,11 +56,12 @@ def hotel_profile_page():
     with st.form("hotel_profile_form", clear_on_submit=False):
         hotel_name = st.text_input("Hotel Name", max_chars=150, value=form_data["hotel_name"])  # ✅ New field
         manager_name = st.text_input("Manager Name", max_chars=150, value=form_data["manager_name"])
-        stop_words = st.text_area("Stop Words (comma-separated)", max_chars=1000, value=form_data["stop_words"])
-        usps = st.text_area("USPs (comma-separated)", max_chars=1000, value=form_data["usps"])
+        greetings = st.text_input("Greetings", max_chars=150, value=form_data["greetings"])
+        stop_words = st.text_area("Stop Words (comma-separated)", max_chars=5000, value=form_data["stop_words"])
+        usps = st.text_area("USPs (comma-separated)", max_chars=10000, value=form_data["usps"])
         reference_urls = st.text_area("Reference URLs (comma-separated)", max_chars=1000, value=form_data["reference_urls"])
-        signature = st.text_input("Signature", max_chars=500, value=form_data["signature"])
-        apporpriate_locations = st.text_input("Appropriate Locations", max_chars=500, value=form_data["apporpriate_locations"])
+        signature = st.text_input("Signature", max_chars=1000, value=form_data["signature"])
+        apporpriate_locations = st.text_input("Appropriate Locations", max_chars=1000, value=form_data["apporpriate_locations"])
 
         submitted = st.form_submit_button("✅ Submit")
 
@@ -70,6 +73,7 @@ def hotel_profile_page():
                     "hotel_id": hotel_id.strip(),
                     "hotel_name": hotel_name.strip(),  # ⬅️ Make sure this is in the form
                     "manager_name": manager_name.strip(),
+                    "greetings":greetings.strip(),
                     "stop_words": [w.strip() for w in stop_words.split(",") if w.strip()],
                     "usps": [u.strip() for u in usps.split(",") if u.strip()],
                     "reference_urls": [r.strip() for r in reference_urls.split(",") if r.strip()],
@@ -94,11 +98,15 @@ def hotel_profile_page():
                         with open(template_path, "r", encoding="utf-8") as f:
                             template_text = f.read()
 
+                        if "{{MANAGER_NAME}}" in data["signature"]:
+                            data["signature"] = data["signature"].replace("{{MANAGER_NAME}}", data["manager_name"])
+
                         # Replace placeholders
                         populated = (
                             template_text
                             .replace("{{HOTEL_NAME}}", data["hotel_name"])
                             .replace("{{MANAGER_NAME}}", data["manager_name"])
+                            .replace("{{GREETINGS}}", data["greetings"])
                             .replace("{{USPS}}", ", ".join(data["usps"]))
                             .replace("{{STOP_WORDS}}", ", ".join(data["stop_words"]))
                             .replace("{{REFERENCE_URLS}}", ", ".join(data["reference_urls"]))
@@ -123,6 +131,7 @@ def hotel_profile_page():
                         "hotel_id": "",
                         "hotel_name": "",
                         "manager_name": "",
+                        "greetings": "",
                         "stop_words": "",
                         "usps": "",
                         "reference_urls": "",

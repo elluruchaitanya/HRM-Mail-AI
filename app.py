@@ -27,7 +27,14 @@ def RunPromptToGenerateResponse(reviewTable, hotel_id):
         reviewTravelPurpose = review['Purpose of travel']
         reviewUser = review['Reviewer user']
         reviewText= review['Review text']
-        finalReviewText= f"Here is a review from the user {reviewUser} with a {reviewScore} star review and visited here for a {reviewTravelPurpose}. The review provided by the user is {reviewText}.Provide the response for this."
+        reviewLength = len(reviewText.strip())  # ✅ Get length of the review
+
+        finalReviewText = (
+            f"Here is a review from the user {reviewUser} with a {reviewScore} star review "
+            f"and visited here for a {reviewTravelPurpose}. "
+            f"The review provided by the user is \"{reviewText}\" having the length of {reviewLength} characters. "
+            f"Provide the response for this."
+        )
         print(finalReviewText)
         response = prompt.generate_response(finalReviewText,reviewUser, hotel_id)
         print(response)
@@ -100,9 +107,9 @@ def run_at_time():
     utc = pytz.utc
     target_time = datetime.now(utc).replace(hour=5, minute=30, second=0, microsecond=0)
     #schedule.every().day.at("05:30").do(main)
-    schedule.every(15).minutes.do(main)
+    schedule.every(1).minutes.do(main)
 
-    print("Scheduler started, waiting for next 15minutes to trigger")
+    print("Scheduler started, waiting for next 1minutes to trigger")
     while True:
         schedule.run_pending()
         time.sleep(1)
