@@ -106,7 +106,7 @@ def hotel_profile_page():
                             template_text
                             .replace("{{HOTEL_NAME}}", data["hotel_name"])
                             .replace("{{MANAGER_NAME}}", data["manager_name"])
-                            .replace("{{GREETINGS}}", ", ".join(data["greetings"]))
+                            .replace("{{GREETINGS}}", data["greetings"])
                             .replace("{{USPS}}", ", ".join(data["usps"]))
                             .replace("{{STOP_WORDS}}", ", ".join(data["stop_words"]))
                             .replace("{{REFERENCE_URLS}}", ", ".join(data["reference_urls"]))
