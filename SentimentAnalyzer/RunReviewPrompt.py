@@ -12,6 +12,10 @@ from langchain.prompts.chat import (
     SystemMessagePromptTemplate,
     HumanMessagePromptTemplate,
 )
+from langchain.globals import set_llm_cache
+# Disable caching globally
+set_llm_cache(None)
+
 
 #import SentimentAnalyzer.sentimentAnalysis as sentiment
 

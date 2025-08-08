@@ -27,10 +27,11 @@ def RunPromptToGenerateResponse(reviewTable, hotel_id):
         reviewTravelPurpose = review['Purpose of travel']
         reviewUser = review['Reviewer user']
         reviewText= review['Review text']
-        reviewLength = len(reviewText.strip())  # ✅ Get length of the review
+        reviewLength = len(reviewText.strip())
+        reviewSource = review['Site name']  # ✅ Get length of the review
 
         finalReviewText = (
-            f"Here is a review from the user {reviewUser} with a {reviewScore} star review "
+            f"Here is a review from the user {reviewUser} with a {reviewScore} star review from the review source {reviewSource} "
             f"and visited here for a {reviewTravelPurpose}. "
             f"The review provided by the user is \"{reviewText}\" having the length of {reviewLength} characters. "
             f"Provide the response for this."
