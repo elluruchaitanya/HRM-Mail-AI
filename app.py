@@ -28,7 +28,7 @@ def RunPromptToGenerateResponse(reviewTable, hotel_id):
         reviewUser = review['Reviewer user']
         reviewText= review['Review text']
         reviewLength = len(reviewText.strip())
-        reviewSource = review['Site name']  # ✅ Get length of the review
+        reviewSource = review['Site name']  #✅ Get length of the review
 
         finalReviewText = (
             f"Here is a review from the user {reviewUser} with a {reviewScore} star review from the review source {reviewSource} "
