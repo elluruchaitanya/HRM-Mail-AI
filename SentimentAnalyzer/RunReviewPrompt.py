@@ -5,6 +5,7 @@ from pathlib import Path
 import openai
 import logging
 import time
+import unicodedata
 from langchain_openai import ChatOpenAI
 from langchain.schema import HumanMessage, SystemMessage
 from langchain.prompts.chat import (    
@@ -37,6 +38,18 @@ def find_file_by_hotelid(hotel_id):
                 return os.path.join(root, file)
     print("file doesnot exists so returning basic template file")
     return  Path(__file__).parent.parent/f"Frontend/HotelTemplates/basic_template.txt"
+def clean_template_text(file_path: str) -> str:
+    """
+    Reads and cleans special characters from a template file.
+    """
+    with open(file_path, "r", encoding="utf-8") as f:
+        raw_text = f.read()
+
+    # Normalize and remove special characters
+    cleaned_text = unicodedata.normalize("NFKD", raw_text)
+    cleaned_text = cleaned_text.encode("ascii", "ignore").decode("ascii")
+
+    return cleaned_text
 
 def generate_assistant_prompt(hotel_id):   
    template_path =find_file_by_hotelid(hotel_id)   
@@ -58,7 +71,7 @@ def generate_response(promptInput, reviewuser, hotel_id):
         # Combine into ChatPromptTemplate
         chat_prompt = ChatPromptTemplate.from_messages([assistant_prompt, human_prompt])
         
-        llm = ChatOpenAI(model = "gpt-4-turbo", temperature=0.7, max_tokens=250)
+        llm = ChatOpenAI(model = "gpt-4-turbo", temperature=0.3, max_tokens=250)
         # Format messages with actual user input
         messages = chat_prompt.format_messages(user_query=promptInput,username=reviewuser)
 

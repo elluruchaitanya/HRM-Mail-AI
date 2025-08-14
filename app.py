@@ -29,17 +29,27 @@ def RunPromptToGenerateResponse(reviewTable, hotel_id):
         reviewText= review['Review text']
         reviewLength = len(reviewText.strip().split())
         reviewSource = review['Site name']  #✅ Get length of the review
-
-        finalReviewText = (
-            f"Here is a review from the user {reviewUser} with a {reviewScore} star review from the review source {reviewSource} "
-            f"and visited here for a {reviewTravelPurpose}. "
-            f"The review provided by the user is \"{reviewText}\" having the length of {reviewLength}. "
-            f"Provide the response for this."
-        )
-        print(finalReviewText)
-        response = prompt.generate_response(finalReviewText,reviewUser, hotel_id)
-        print(response)
-        review["ArissaAI Responses"] = response
+        reviewResponse = review['Response text']
+        dontGenerateResponse  = False
+        if(len(reviewResponse.split()) > 0 and reviewSource == "Booking.com"):
+            dontGenerateResponse = True
+        if len(reviewResponse.split()) == 0 and dontGenerateResponse == False :
+            try:
+                finalReviewText = (
+                    f"Here is a review from the user {reviewUser} with a {reviewScore} star review from the review source {reviewSource} "
+                    f"and visited here for a {reviewTravelPurpose}. "
+                    f"The review provided by the user is \"{reviewText}\" having the length of {reviewLength}. "
+                    f"Provide the response for this."
+                )
+                print(finalReviewText)
+                response = prompt.generate_response(finalReviewText,reviewUser, hotel_id)
+                print(response)
+                review["ArissaAI Responses"] = response
+            except Exception as e:
+                print(f"Error generating response: {e}")
+                review["ArissaAI Responses"] = ""
+        else:
+            review["ArissaAI Responses"] = ""
 
 def RenderEmailProcessReviewThenReply():
     load_dotenv()
