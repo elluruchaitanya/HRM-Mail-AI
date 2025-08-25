@@ -96,11 +96,12 @@ def hotel_profile_page():
                         st.warning("⚠️ Template file not found.")
                     else:
                         with open(template_path, "r", encoding="utf-8") as f:
+                            print(f"started reading the template")
                             template_text = f.read()
 
                         if "{{MANAGER_NAME}}" in data["signature"]:
                             data["signature"] = data["signature"].replace("{{MANAGER_NAME}}", data["manager_name"])
-
+                        print(f"template text:", template_text)
                         # Replace placeholders
                         populated = (
                             template_text
@@ -114,7 +115,7 @@ def hotel_profile_page():
                             .replace("{{APPROPRIATE_LOCATIONS}}", data["apporpriate_locations"])
                         )
                         # data["template_content"] = populated
-
+                        print(f"populated text", populated)
                         # Overwrite or create the file
                         output_file = Path(__file__).parent / "HotelTemplates" / f"{data['hotel_name']}-{data['hotel_id']}.txt"
                         with open(output_file, "w", encoding="utf-8") as out:

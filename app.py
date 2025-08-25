@@ -31,13 +31,12 @@ def RunPromptToGenerateResponse(reviewTable, hotel_id):
         reviewSource = review['Site name']  #✅ Get length of the review
         reviewResponse = review['Response text']
         dontGenerateResponse  = False
-        if(len(reviewResponse.split()) > 0 and reviewSource == "Booking.com"):
+        if(len(reviewResponse.split()) > 0):
             dontGenerateResponse = True
         if len(reviewResponse.split()) == 0 and dontGenerateResponse == False :
             try:
                 finalReviewText = (
-                    f"Here is a review from the user {reviewUser} with a {reviewScore} star review from the review source {reviewSource} "
-                    f"and visited here for a {reviewTravelPurpose}. "
+                    f"Here is a review from the user {reviewUser} with a {reviewScore} star review from the review source {reviewSource} "                    
                     f"The review provided by the user is \"{reviewText}\" having the length of {reviewLength}. "
                     f"Provide the response for this."
                 )
