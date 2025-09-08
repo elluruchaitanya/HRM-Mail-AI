@@ -48,7 +48,9 @@ def RunPromptToGenerateResponse(reviewTable, hotel_id):
                 print(f"Error generating response: {e}")
                 review["ArissaAI Responses"] = ""
         else:
-            review["ArissaAI Responses"] = ""
+            print(f"review response not required")
+            review["ArissaAI Responses"] = f"The below response is already published "+reviewResponse
+        print(review["ArissaAI Responses"])
 
 def RenderEmailProcessReviewThenReply():
     load_dotenv()
