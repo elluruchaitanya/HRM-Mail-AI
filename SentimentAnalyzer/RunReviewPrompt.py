@@ -70,7 +70,8 @@ def generate_response(promptInput, reviewuser, hotel_id):
 
         # Combine into ChatPromptTemplate
         chat_prompt = ChatPromptTemplate.from_messages([assistant_prompt, human_prompt])
-        if str(hotel_id) == "The Royal Sonesta Chase Park Plaza Hotel-846688":
+        print(hotel_id)
+        if str(hotel_id).lower() == "846688":
             model_name = "ft:gpt-3.5-turbo-0125:personal::C8hz9bCy"
         else:
             model_name = "gpt-4-turbo"
