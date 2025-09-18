@@ -71,10 +71,10 @@ def generate_response(promptInput, reviewuser, hotel_id):
         # Combine into ChatPromptTemplate
         chat_prompt = ChatPromptTemplate.from_messages([assistant_prompt, human_prompt])
         print(hotel_id)
-        if str(hotel_id).lower() == "846688":
-            model_name = "ft:gpt-3.5-turbo-0125:personal::C8hz9bCy"
-        else:
-            model_name = "gpt-4-turbo"
+        #if str(hotel_id).lower() == "846688":
+        model_name = "ft:gpt-3.5-turbo-1106:personal::CGjZCrFr" #ft:gpt-3.5-turbo-0125:personal::C8hz9bCy"
+        #else:
+         #   model_name = "gpt-4-turbo"
         
         print(f"[DEBUG] Using model: {model_name} for hotel_id={hotel_id}")
         llm = ChatOpenAI(model = model_name, temperature=0.3, max_tokens=250)
