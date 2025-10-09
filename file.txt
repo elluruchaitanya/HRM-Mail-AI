@@ -1,0 +1,54 @@
+reviewText = (
+    "I stayed here because it was close to Barnes-Jewish Hospital. "
+    "The room was a little small and the thermostat was messed up, swinging from too hot to too cold the whole time. "
+    "I was quoted one price when I made the reservation but charged a higher price at check-in. "
+    "The bed was uncomfortable and I couldn’t sleep very well at all. "
+    "My room was the farthest from the elevators and, as someone with lung issues, it was too far to walk. "
+    "They wouldn’t move me to a closer room. "
+    "Overall, it was a very poor experience and I won’t be back."
+)
+
+
+Dear Fabri Basom,
+
+We thank you for sharing your review. 
+While we are pleased to learn that our location served you well for your needs, 
+we are sorry to learn that your visit was not fully enjoyed. 
+We appreciate the added feedback and we hope you can one day join us again 
+so that we might ensure a more treasured experience.
+
+All the best,
+The Royal Sonesta Chase Park Plaza Hotel
+
+
+Dear Fabri Basom,
+
+Thank you for sharing your experience.
+We sincerely apologize for the discomfort and inconvenience you encountered during your stay. 
+We strive to ensure all our guests enjoy a seamless and comfortable experience, and it seems we fell short in this instance.
+We are currently reviewing our room allocation process to better accommodate the needs of our guests with mobility concerns.
+Additionally, we are investigating the inconsistency in temperature control within the rooms to prevent such experiences in the future.
+Your feedback is invaluable in helping us improve, and we hope you will consider allowing us another opportunity to provide you with the genuine hospitality and improved comfort we are known for.
+
+Warm regards,
+The Royal Sonesta Chase Park Plaza Hotel
+
+---GPT MODEL----
+Dear Hannah Barahona,
+
+Thank you for sharing your experience. We sincerely apologize for the confusion upon your early arrival and the unsettling room assignment issue. Our team is reviewing our procedures to ensure the privacy and security of our guests are always upheld.
+We are glad to hear that our proximity to Navy Pier met your expectations, offering a prime location to explore the area's attractions. Should you reconsider, we would love to welcome you back for a seamless experience that reflects our true standards.
+
+Warm regards,
+Basic Hotel
+
+
+-- 6 Months Trained Data --
+Hello Hannah Barahona,
+
+Your review was received with our full attention and we thank you for taking the time to share your thoughtful and valuable feedback. We are delighted to learn that our location served you well for exploring the many charms of our iconic neighborhood, and we trust the treasured memories created will soon inspire your return.
+We appreciate you shining a light on the details that left you feeling unsettled, and we extend our most sincere apologies for the inconsistency in the details provided by our team. Your added feedback has been shared with our leadership team and we trust you will find comfort in knowing that we have already taken steps to ensure that this is never repeated.      
+We thank you once more and we hope to one day welcome you again, providing the exceptional experience that we are known to provide.
+
+Warm regards,
+ Basic Hotel
